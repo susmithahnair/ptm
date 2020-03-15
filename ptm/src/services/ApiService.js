@@ -1,6 +1,7 @@
 import axios from "axios";
 const ApiService = {
-  call: p => axios.get(`/api/myApi`)
+  conversionRates: p =>
+    axios.get(`https://api.exchangeratesapi.io/latest?base=CAD`)
 };
 
 export default ApiService;

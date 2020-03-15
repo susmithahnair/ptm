@@ -4,6 +4,7 @@ import ExpenseGroup from "../../components/ExpenseGroup/ExpenseGroup";
 import { Receipt } from "../../components/Reciept";
 import { Modal } from "../../components/Modal";
 import useForms from "../../utils/useForms";
+import ApiService from "../../services/ApiService";
 import _ from "lodash";
 
 const RecieptContainer = () => {
@@ -34,6 +35,7 @@ const RecieptContainer = () => {
     setShowModal(true);
     setInputs(initialInput);
   };
+  const [conversionRates, setConversionRates] = useState();
   const submitReceipt = e => {};
 
   const handleSubmit = item => {
@@ -41,6 +43,14 @@ const RecieptContainer = () => {
     setShowModal(false);
   };
 
+  useEffect(() => {
+    ApiService.conversionRates().then(
+      response =>
+        response.status === 200 && setConversionRates(response.data.rates)
+    );
+  }, []);
+
+  console.log(conversionRates);
   return (
     <Grid container spacing={8}>
       <Grid item xs={12}>
