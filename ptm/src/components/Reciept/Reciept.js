@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, TextareaAutosize, TextField, MenuItem } from "@material-ui/core";
+import { Grid, TextField, MenuItem } from "@material-ui/core";
 
 const Receipt = ({ inputs, handleInputChange }) => {
   return (

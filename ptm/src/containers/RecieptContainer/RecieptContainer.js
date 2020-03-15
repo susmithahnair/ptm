@@ -1,21 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Grid, Button, Typography, Dialog } from "@material-ui/core";
 import ExpenseGroup from "../../components/ExpenseGroup/ExpenseGroup";
 import { Receipt } from "../../components/Reciept";
 import { Modal } from "../../components/Modal";
 import useForms from "../../utils/useForms";
+import _ from "lodash";
 
 const RecieptContainer = () => {
-  const [items, setItems] = useState([
-    { id: 1, description: "1st item", value: "123", currency: "CAD" },
-    { id: 2, description: "2nd item", value: "456", currency: "CAD" },
-    { id: 3, description: "3rd item", value: "789", currency: "CAD" }
-  ]);
+  const [items, setItems] = useState([]);
+
+  const [total, setTotal] = useState(0);
 
   const initialInput = {
     description: "",
     currency: "",
-    value: ""
+    value: 0
+  };
+
+  useEffect(() => {
+    calculateTotal();
+  }, [items]);
+
+  const calculateTotal = () => {
+    let total = 0;
+    _.forEach(items, item => {
+      total += Number(item.value);
+    });
+    setTotal(total);
   };
   const { inputs, setInputs, handleInputChange } = useForms(initialInput);
   const [showModal, setShowModal] = useState(false);
@@ -41,6 +52,9 @@ const RecieptContainer = () => {
       </Grid>
       <Grid item xs={12}>
         <ExpenseGroup items={items}></ExpenseGroup>
+      </Grid>
+      <Grid item xs={12}>
+        <Typography align="right">Total: {total}</Typography>
       </Grid>
       <Grid item xs={12}>
         <Typography align="center">
