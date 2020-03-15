@@ -16,6 +16,7 @@ import { Modal } from "../../components/Modal";
 import useForms from "../../utils/useForms";
 import ApiService from "../../services/ApiService";
 import _ from "lodash";
+import { useMemo } from "react";
 
 const useStyles = makeStyles(theme => ({
   listTotal: { display: "flex", justifyContent: "flex-end" },
@@ -36,16 +37,13 @@ const ReceiptContainer = () => {
   };
 
   useEffect(() => {
-    calculateTotal();
-  }, [items]);
-
-  const calculateTotal = () => {
     let total = 0;
     _.forEach(items, item => {
       total += Number(item.value);
     });
     setTotal(total);
-  };
+  }, [items]);
+
   const { inputs, setInputs, handleInputChange } = useForms(initialInput);
   const [showModal, setShowModal] = useState(false);
   const addReceipt = e => {
@@ -66,11 +64,21 @@ const ReceiptContainer = () => {
     var convertedVal = inputs.value / conversionRate;
     let totalInCAD = total + convertedVal;
 
+    if (!inputs.value || !inputs.description || !inputs.currency) {
+      setErrors("All fields are mandatory.");
+      return;
+    }
+
+    if (inputs.value < 0) {
+      setErrors("Invalid amount entered.");
+      return;
+    }
+
     if (totalInCAD > receiptLimit) {
       setErrors("Total exceeded.");
       return;
     }
-    if (inputs.currency != globalCurrency) {
+    if (inputs.currency !== globalCurrency) {
       inputs.currency = globalCurrency;
       inputs.value = convertedVal;
     }
@@ -79,7 +87,7 @@ const ReceiptContainer = () => {
     setShowModal(false);
   };
 
-  useEffect(() => {
+  useMemo(() => {
     ApiService.conversionRates(globalCurrency).then(response => {
       response.status === 200 && setConversionRates(response.data.rates);
       setReceiptLimit(1000 / response.data.rates["CAD"]);
@@ -94,7 +102,7 @@ const ReceiptContainer = () => {
       total += item.value;
     });
     setTotal(total);
-  }, [globalCurrency]);
+  }, [globalCurrency, conversionRates, items]);
 
   return (
     <Box

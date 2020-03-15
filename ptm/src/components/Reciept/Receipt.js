@@ -1,10 +1,15 @@
 import React from "react";
 import _ from "lodash";
-import { Grid, TextField, MenuItem } from "@material-ui/core";
+import { Grid, TextField, MenuItem, Typography } from "@material-ui/core";
 
-const Receipt = ({ inputs, handleInputChange, currencies, errors }) => {
+const Receipt = ({ inputs = {}, handleInputChange, currencies, errors }) => {
   return (
-    <Grid container justify="center" spacing={4}>
+    <Grid
+      data-test="receiptModalContainer"
+      container
+      justify="center"
+      spacing={4}
+    >
       <Grid item xs={12}>
         <TextField
           label="Description"
@@ -24,6 +29,7 @@ const Receipt = ({ inputs, handleInputChange, currencies, errors }) => {
           onChange={handleInputChange}
           fullWidth
           required
+          InputProps={{ inputProps: { min: 0 } }}
         />
       </Grid>
       <Grid item xs={12}>
@@ -44,7 +50,7 @@ const Receipt = ({ inputs, handleInputChange, currencies, errors }) => {
         </TextField>
       </Grid>
       <Grid item xs={12}>
-        {errors}
+        <Typography color="error">{errors}</Typography>
       </Grid>
     </Grid>
   );

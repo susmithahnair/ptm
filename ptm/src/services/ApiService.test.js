@@ -7,7 +7,11 @@ describe("ApiService calls APIs via axios", () => {
   it("Api call test", () => {
     let resp = { statusOfApi: "Success" };
     axios.get.mockResolvedValue(resp);
-    ApiService.call().then(d => expect(d.statusOfApi).toEqual("Success"));
-    expect(axios.get).toBeCalledWith("/api/myApi");
+    ApiService.conversionRates("CAD").then(d =>
+      expect(d.statusOfApi).toEqual("Success")
+    );
+    expect(axios.get).toBeCalledWith(
+      `https://api.exchangeratesapi.io/latest?base=CAD`
+    );
   });
 });

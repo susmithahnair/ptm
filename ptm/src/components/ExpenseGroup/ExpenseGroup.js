@@ -4,10 +4,10 @@ import { ExpenseItem } from "../ExpenseItem";
 import { Typography, ListItem, Divider } from "@material-ui/core";
 
 const ExpenseGroup = ({ items }) => {
-  return items.length > 0 ? (
+  return items && items.length > 0 ? (
     _.map(items, (item, index) => (
       <React.Fragment key={index}>
-        <ListItem button>
+        <ListItem button data-test="expenseGroupItems">
           <ExpenseItem
             description={item.description}
             value={item.value}
@@ -18,7 +18,7 @@ const ExpenseGroup = ({ items }) => {
       </React.Fragment>
     ))
   ) : (
-    <Typography color="primary" align="center">
+    <Typography data-test="expenseGroup" color="primary" align="center">
       Please add Receipts.
     </Typography>
   );

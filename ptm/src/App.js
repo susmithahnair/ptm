@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import { Grid, makeStyles, Typography } from "@material-ui/core";
+import { Grid, makeStyles } from "@material-ui/core";
 import { ReceiptContainer } from "./containers/ReceiptContainer";
 const useStyles = makeStyles(theme => ({
   container: {

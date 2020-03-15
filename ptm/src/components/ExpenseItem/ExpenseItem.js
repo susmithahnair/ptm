@@ -3,13 +3,15 @@ import { Grid, Typography } from "@material-ui/core";
 
 const ExpenseItem = ({ description, value, currency }) => {
   return (
-    <Grid container spacing={4}>
+    <Grid data-test="expenseItem" container spacing={4}>
       <Grid item xs={6}>
-        <Typography>{description}</Typography>
+        <Typography data-test="expenseItemDescription">
+          {description}
+        </Typography>
       </Grid>
       <Grid item xs={6}>
-        <Typography align="right">
-          {value}&nbsp;{currency}
+        <Typography align="right" data-test="expenseItemValueCurrency">
+          {value} {currency}
         </Typography>
       </Grid>
     </Grid>

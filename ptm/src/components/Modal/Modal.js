@@ -7,17 +7,27 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 
 export default function FormDialog({ handleSubmit, ...props }) {
   return (
-    <div>
+    <div data-test="modalComponent">
       <Dialog open={props.open} {...props} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">{props.title}</DialogTitle>
         <DialogContent style={{ minHeight: "200px", paddingTop: "20px" }}>
           {props.children}
         </DialogContent>
         <DialogActions>
-          <Button onClick={props.onClose} color="secondary" variant="contained">
+          <Button
+            data-test="modalCloseButton"
+            onClick={props.onClose}
+            color="secondary"
+            variant="contained"
+          >
             Cancel
           </Button>
-          <Button color="primary" variant="contained" onClick={handleSubmit}>
+          <Button
+            data-test="modalSubmitButton"
+            color="primary"
+            variant="contained"
+            onClick={handleSubmit}
+          >
             Submit
           </Button>
         </DialogActions>
