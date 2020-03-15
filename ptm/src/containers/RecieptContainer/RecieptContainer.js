@@ -25,6 +25,12 @@ const RecieptContainer = () => {
   const calculateTotal = () => {
     let total = 0;
     _.forEach(items, item => {
+      if (item.currency != "CAD") {
+        let conversionRate = conversionRates[item.currency];
+        item.currency = "CAD";
+        item.value = item.value / conversionRate;
+        console.log(conversionRate, total);
+      }
       total += Number(item.value);
     });
     setTotal(total);
@@ -50,7 +56,6 @@ const RecieptContainer = () => {
     );
   }, []);
 
-  console.log(conversionRates);
   return (
     <Grid container spacing={8}>
       <Grid item xs={12}>
