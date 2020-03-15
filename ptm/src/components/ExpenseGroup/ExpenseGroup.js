@@ -3,9 +3,9 @@ import _ from "lodash";
 import { ExpenseItem } from "../ExpenseItem";
 
 const ExpenseGroup = ({ items }) => {
-  return _.map(items, item => (
+  return _.map(items, (item, index) => (
     <ExpenseItem
-      key={item.id}
+      key={index}
       description={item.description}
       value={item.value}
       currency={item.currency}

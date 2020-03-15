@@ -1,10 +1,11 @@
 import React from "react";
+import _ from "lodash";
 import { Grid, TextField, MenuItem } from "@material-ui/core";
 
-const Receipt = ({ inputs, handleInputChange }) => {
+const Receipt = ({ inputs, handleInputChange, currencies }) => {
   return (
     <Grid container justify="center" spacing={4}>
-      <Grid xs={12}>
+      <Grid item xs={12}>
         <TextField
           label="Description"
           name="description"
@@ -14,7 +15,7 @@ const Receipt = ({ inputs, handleInputChange }) => {
           required
         ></TextField>
       </Grid>
-      <Grid xs={12}>
+      <Grid item xs={12}>
         <TextField
           label="Amount"
           name="value"
@@ -25,7 +26,7 @@ const Receipt = ({ inputs, handleInputChange }) => {
           required
         />
       </Grid>
-      <Grid xs={12}>
+      <Grid item xs={12}>
         <TextField
           select
           label="currency"
@@ -35,8 +36,11 @@ const Receipt = ({ inputs, handleInputChange }) => {
           fullWidth
           required
         >
-          <MenuItem value="CAD">CAD</MenuItem>
-          <MenuItem value="USD">USD</MenuItem>
+          {_.map(currencies, currency => (
+            <MenuItem value={currency} key={currency}>
+              {currency}
+            </MenuItem>
+          ))}
         </TextField>
       </Grid>
     </Grid>

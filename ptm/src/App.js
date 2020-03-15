@@ -17,9 +17,9 @@ function App() {
       className={styles.container}
     >
       <Grid item md={12}>
-        <Typography align="center">
-          <h1>Expense Manager</h1>
-        </Typography>
+        <h1>
+          <Typography align="center">Expense Manager</Typography>
+        </h1>
       </Grid>
       <Grid item md={6}>
         <RecieptContainer />

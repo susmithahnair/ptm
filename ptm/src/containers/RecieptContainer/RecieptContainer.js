@@ -78,11 +78,12 @@ const RecieptContainer = () => {
           maxWidth="md"
           fullWidth
           open={showModal}
-          handleClose={e => setShowModal(false)}
+          onClose={e => setShowModal(false)}
           handleSubmit={handleSubmit}
           title={"Add Receipt"}
         >
           <Receipt
+            currencies={Object.keys(conversionRates)}
             inputs={inputs}
             handleInputChange={handleInputChange}
           ></Receipt>
