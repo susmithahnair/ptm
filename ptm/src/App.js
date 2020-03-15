@@ -4,7 +4,7 @@ import { Grid, makeStyles } from "@material-ui/core";
 import { ReceiptContainer } from "./containers/ReceiptContainer";
 const useStyles = makeStyles(theme => ({
   container: {
-    minHeight: "100vh"
+    maxHeight: "100vh"
   }
 }));
 function App() {

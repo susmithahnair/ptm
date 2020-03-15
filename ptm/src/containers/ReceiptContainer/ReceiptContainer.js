@@ -64,6 +64,11 @@ const ReceiptContainer = () => {
     var convertedVal = inputs.value / conversionRate;
     let totalInCAD = total + convertedVal;
 
+    if (items.length >= 5) {
+      setErrors("You can only add 5 receipts.");
+      return;
+    }
+
     if (!inputs.value || !inputs.description || !inputs.currency) {
       setErrors("All fields are mandatory.");
       return;
@@ -106,6 +111,7 @@ const ReceiptContainer = () => {
 
   return (
     <Box
+      boxShadow={3}
       border={1}
       borderColor="primary.main"
       borderRadius="1rem"
@@ -132,7 +138,7 @@ const ReceiptContainer = () => {
               onClick={addReceipt}
               color="secondary"
               variant="contained"
-              disabled={total >= receiptLimit}
+              disabled={total >= receiptLimit || items.length >= 5}
             >
               Add Receipt
             </Button>
