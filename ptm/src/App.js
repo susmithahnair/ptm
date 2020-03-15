@@ -16,10 +16,10 @@ function App() {
       alignItems="center"
       className={styles.container}
     >
-      <Grid item md={12}>
+      <Grid item sm={11}>
         <h1 align="center">Expense Manager</h1>
       </Grid>
-      <Grid item md={6}>
+      <Grid item sm={11} md={6}>
         <ReceiptContainer />
       </Grid>
     </Grid>

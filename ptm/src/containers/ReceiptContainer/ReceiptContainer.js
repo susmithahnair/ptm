@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Grid, Button, Typography, Dialog } from "@material-ui/core";
+import {
+  Grid,
+  Button,
+  Typography,
+  TextField,
+  MenuItem,
+  Box,
+  ListItem,
+  Divider,
+  makeStyles
+} from "@material-ui/core";
 import ExpenseGroup from "../../components/ExpenseGroup/ExpenseGroup";
 import { Receipt } from "../../components/Reciept";
 import { Modal } from "../../components/Modal";
@@ -7,7 +17,13 @@ import useForms from "../../utils/useForms";
 import ApiService from "../../services/ApiService";
 import _ from "lodash";
 
+const useStyles = makeStyles(theme => ({
+  listTotal: { display: "flex", justifyContent: "flex-end" },
+  totalText: { fontWeight: "bold" }
+}));
+
 const ReceiptContainer = () => {
+  let classes = useStyles();
   const [items, setItems] = useState([]);
   const [errors, setErrors] = useState("");
 
@@ -37,22 +53,26 @@ const ReceiptContainer = () => {
     setErrors("");
     setInputs(initialInput);
   };
-  const [conversionRates, setConversionRates] = useState();
+  const [conversionRates, setConversionRates] = useState({});
+  const [globalCurrency, setGlobalCurrency] = useState("CAD");
+  const [receiptLimit, setReceiptLimit] = useState(0);
   const submitReceipt = e => {
     console.log(items);
   };
 
   const handleSubmit = item => {
     inputs.value = Number(inputs.value);
-    if (inputs.currency != "CAD") {
-      let conversionRate = conversionRates[inputs.currency];
-      inputs.currency = "CAD";
-      inputs.value = inputs.value / conversionRate;
-    }
+    let conversionRate = conversionRates[inputs.currency];
+    var convertedVal = inputs.value / conversionRate;
+    let totalInCAD = total + convertedVal;
 
-    if (total + inputs.value > 1000) {
+    if (totalInCAD > receiptLimit) {
       setErrors("Total exceeded.");
       return;
+    }
+    if (inputs.currency != globalCurrency) {
+      inputs.currency = globalCurrency;
+      inputs.value = convertedVal;
     }
 
     setItems(prev => [...prev, inputs]);
@@ -60,57 +80,91 @@ const ReceiptContainer = () => {
   };
 
   useEffect(() => {
-    ApiService.conversionRates().then(
-      response =>
-        response.status === 200 && setConversionRates(response.data.rates)
-    );
-  }, []);
+    ApiService.conversionRates(globalCurrency).then(response => {
+      response.status === 200 && setConversionRates(response.data.rates);
+      setReceiptLimit(1000 / response.data.rates["CAD"]);
+    });
+  }, [globalCurrency]);
+
+  useEffect(() => {
+    let total = 0;
+    _.forEach(items, item => {
+      item.value = conversionRates[globalCurrency] * item.value;
+      item.currency = globalCurrency;
+      total += item.value;
+    });
+    setTotal(total);
+  }, [globalCurrency]);
 
   return (
-    <Grid container spacing={8}>
-      <Grid item xs={12}>
-        <Typography align="right">
-          <Button
-            onClick={addReceipt}
-            color="secondary"
-            variant="contained"
-            disabled={total >= 1000}
+    <Box
+      border={1}
+      borderColor="primary.main"
+      borderRadius="1rem"
+      padding="2rem"
+    >
+      <Grid container spacing={8}>
+        <Grid item xs={12}>
+          <TextField
+            select
+            label="Currency"
+            name="currency"
+            value={globalCurrency}
+            onChange={e => setGlobalCurrency(e.target.value)}
+            required
           >
-            Add Receipt
-          </Button>
-        </Typography>
+            {_.map(Object.keys(conversionRates), currency => (
+              <MenuItem value={currency} key={currency}>
+                {currency}
+              </MenuItem>
+            ))}
+          </TextField>
+          <Typography align="right">
+            <Button
+              onClick={addReceipt}
+              color="secondary"
+              variant="contained"
+              disabled={total >= receiptLimit}
+            >
+              Add Receipt
+            </Button>
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <ExpenseGroup items={items} divider></ExpenseGroup>
+          <Divider></Divider>
+          <ListItem button className={classes.listTotal}>
+            <Typography className={classes.totalText}>
+              Total: {total} {globalCurrency}
+            </Typography>
+          </ListItem>
+        </Grid>
+        <Grid item xs={12}>
+          <Typography align="center">
+            <Button onClick={submitReceipt} variant="contained" color="primary">
+              Submit
+            </Button>
+          </Typography>
+        </Grid>
+        {showModal && (
+          <Modal
+            maxWidth="md"
+            fullWidth
+            open={showModal}
+            onClose={e => setShowModal(false)}
+            handleSubmit={handleSubmit}
+            title={"Add Receipt"}
+          >
+            <Receipt
+              errors={errors}
+              currencies={Object.keys(conversionRates)}
+              inputs={inputs}
+              handleInputChange={handleInputChange}
+            ></Receipt>
+          </Modal>
+        )}
       </Grid>
-      <Grid item xs={12}>
-        <ExpenseGroup items={items}></ExpenseGroup>
-      </Grid>
-      <Grid item xs={12}>
-        <Typography align="right">Total: {total} CAD</Typography>
-      </Grid>
-      <Grid item xs={12}>
-        <Typography align="center">
-          <Button onClick={submitReceipt} variant="contained" color="primary">
-            Submit
-          </Button>
-        </Typography>
-      </Grid>
-      {showModal && (
-        <Modal
-          maxWidth="md"
-          fullWidth
-          open={showModal}
-          onClose={e => setShowModal(false)}
-          handleSubmit={handleSubmit}
-          title={"Add Receipt"}
-        >
-          <Receipt
-            errors={errors}
-            currencies={Object.keys(conversionRates)}
-            inputs={inputs}
-            handleInputChange={handleInputChange}
-          ></Receipt>
-        </Modal>
-      )}
-    </Grid>
+    </Box>
   );
 };
 
