@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import { Grid, makeStyles, Typography } from "@material-ui/core";
-import { RecieptContainer } from "./containers/RecieptContainer";
+import { ReceiptContainer } from "./containers/ReceiptContainer";
 const useStyles = makeStyles(theme => ({
   container: {
     minHeight: "100vh"
@@ -17,12 +17,10 @@ function App() {
       className={styles.container}
     >
       <Grid item md={12}>
-        <h1>
-          <Typography align="center">Expense Manager</Typography>
-        </h1>
+        <h1 align="center">Expense Manager</h1>
       </Grid>
       <Grid item md={6}>
-        <RecieptContainer />
+        <ReceiptContainer />
       </Grid>
     </Grid>
   );

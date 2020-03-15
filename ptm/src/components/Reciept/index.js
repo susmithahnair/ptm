@@ -1,1 +1,1 @@
-export { default as Receipt } from "./Reciept";
+export { default as Receipt } from "./Receipt";

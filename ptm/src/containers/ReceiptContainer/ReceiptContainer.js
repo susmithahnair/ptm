@@ -7,7 +7,7 @@ import useForms from "../../utils/useForms";
 import ApiService from "../../services/ApiService";
 import _ from "lodash";
 
-const RecieptContainer = () => {
+const ReceiptContainer = () => {
   const [items, setItems] = useState([]);
   const [errors, setErrors] = useState("");
 
@@ -38,7 +38,9 @@ const RecieptContainer = () => {
     setInputs(initialInput);
   };
   const [conversionRates, setConversionRates] = useState();
-  const submitReceipt = e => {};
+  const submitReceipt = e => {
+    console.log(items);
+  };
 
   const handleSubmit = item => {
     inputs.value = Number(inputs.value);
@@ -47,7 +49,7 @@ const RecieptContainer = () => {
       inputs.currency = "CAD";
       inputs.value = inputs.value / conversionRate;
     }
-    debugger;
+
     if (total + inputs.value > 1000) {
       setErrors("Total exceeded.");
       return;
@@ -82,7 +84,7 @@ const RecieptContainer = () => {
         <ExpenseGroup items={items}></ExpenseGroup>
       </Grid>
       <Grid item xs={12}>
-        <Typography align="right">Total: {total}</Typography>
+        <Typography align="right">Total: {total} CAD</Typography>
       </Grid>
       <Grid item xs={12}>
         <Typography align="center">
@@ -112,4 +114,4 @@ const RecieptContainer = () => {
   );
 };
 
-export default RecieptContainer;
+export default ReceiptContainer;
