@@ -9,6 +9,7 @@ import _ from "lodash";
 
 const RecieptContainer = () => {
   const [items, setItems] = useState([]);
+  const [errors, setErrors] = useState("");
 
   const [total, setTotal] = useState(0);
 
@@ -25,12 +26,6 @@ const RecieptContainer = () => {
   const calculateTotal = () => {
     let total = 0;
     _.forEach(items, item => {
-      if (item.currency != "CAD") {
-        let conversionRate = conversionRates[item.currency];
-        item.currency = "CAD";
-        item.value = item.value / conversionRate;
-        console.log(conversionRate, total);
-      }
       total += Number(item.value);
     });
     setTotal(total);
@@ -39,12 +34,25 @@ const RecieptContainer = () => {
   const [showModal, setShowModal] = useState(false);
   const addReceipt = e => {
     setShowModal(true);
+    setErrors("");
     setInputs(initialInput);
   };
   const [conversionRates, setConversionRates] = useState();
   const submitReceipt = e => {};
 
   const handleSubmit = item => {
+    inputs.value = Number(inputs.value);
+    if (inputs.currency != "CAD") {
+      let conversionRate = conversionRates[inputs.currency];
+      inputs.currency = "CAD";
+      inputs.value = inputs.value / conversionRate;
+    }
+    debugger;
+    if (total + inputs.value > 1000) {
+      setErrors("Total exceeded.");
+      return;
+    }
+
     setItems(prev => [...prev, inputs]);
     setShowModal(false);
   };
@@ -88,6 +96,7 @@ const RecieptContainer = () => {
           title={"Add Receipt"}
         >
           <Receipt
+            errors={errors}
             currencies={Object.keys(conversionRates)}
             inputs={inputs}
             handleInputChange={handleInputChange}
