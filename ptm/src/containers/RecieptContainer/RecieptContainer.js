@@ -68,7 +68,12 @@ const RecieptContainer = () => {
     <Grid container spacing={8}>
       <Grid item xs={12}>
         <Typography align="right">
-          <Button onClick={addReceipt} color="secondary" variant="contained">
+          <Button
+            onClick={addReceipt}
+            color="secondary"
+            variant="contained"
+            disabled={total >= 1000}
+          >
             Add Receipt
           </Button>
         </Typography>

@@ -2,7 +2,7 @@ import React from "react";
 import _ from "lodash";
 import { Grid, TextField, MenuItem } from "@material-ui/core";
 
-const Receipt = ({ inputs, handleInputChange, currencies }) => {
+const Receipt = ({ inputs, handleInputChange, currencies, errors }) => {
   return (
     <Grid container justify="center" spacing={4}>
       <Grid item xs={12}>
@@ -42,6 +42,9 @@ const Receipt = ({ inputs, handleInputChange, currencies }) => {
             </MenuItem>
           ))}
         </TextField>
+      </Grid>
+      <Grid item xs={12}>
+        {errors}
       </Grid>
     </Grid>
   );
